@@ -12,7 +12,13 @@ COPY docker/test.sh /bin/
 RUN chmod +x /bin/startup.sh
 RUN chmod +x /bin/test.sh
 
+# Prepare writable workdir for non-root user
+RUN mkdir -p /data && chown -R node:node /data
+
+# Drop privileges: run as the built-in non-root 'node' user
+USER node
+
 WORKDIR /data
 VOLUME /data
-EXPOSE 587
+EXPOSE 2587
 ENTRYPOINT startup.sh
